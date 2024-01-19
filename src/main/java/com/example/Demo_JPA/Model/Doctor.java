@@ -29,7 +29,7 @@ public class Doctor {
     VaccinationCenter vaccinationCenter;
     int patientCount;
 
-    @OneToMany
+    @ManyToMany
     List<Patient> patientList;
 }
 

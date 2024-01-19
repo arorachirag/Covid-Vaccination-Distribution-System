@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 @ToString
 public class CreateAppointmentDTO {
-    UUID id;
 
+    String email;
     VaccinationCenterPreference vaccinationCenterPreference;
 }

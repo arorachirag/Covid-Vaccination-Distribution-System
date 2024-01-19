@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DoctorService {
@@ -17,12 +18,27 @@ public class DoctorService {
     @Autowired
     VaccinationCenterService vaccinationCenterService;
 
-    public Doctor registerDoctor(Doctor doctor){
-        doctorRepository.save(doctor);
-        List<VaccinationCenter> vaccinationCenterList = vaccinationCenterService.getMinimumDoctorCount();
+    // Doctor will get assigned in that vaccination center who is having minimum number of doctor
+    public Doctor registerDoctor(Doctor obj){
+        List<VaccinationCenter> vaccinationCenterList = vaccinationCenterService.getMinimumDoctorCountVC();
         VaccinationCenter vaccinationCenter = vaccinationCenterList.get(0);
-        doctor.setVaccinationCenter(vaccinationCenter);
+        obj.setVaccinationCenter(vaccinationCenter);
         vaccinationCenterService.updateDocCountByOne(vaccinationCenter);
-        return doctor;
+        doctorRepository.save(obj);
+        return obj;
     }
+
+    public List<Doctor> getMinimumDoctorOnTheBasisOfVC(UUID vcid){
+        return doctorRepository.getMinimumDoctorOnTheBasisOfVC(vcid);
+    }
+
+    public void updatePatientCountByOne(Doctor doctor){
+        UUID id = doctor.getId();
+        int patientCount = doctor.getPatientCount() + 1;
+        doctorRepository.updatePatientCountByOne(id, patientCount);
+    }
+
+//    public void addPatientVsDoctor(UUID patientId, UUID doctorId){
+//        doctorRepository.insertIntoDoctorVsPatientsTable(doctorId, patientId);
+//    }
 }
